@@ -9,7 +9,7 @@
     "migrate": "sequelize-cli db:migrate",
     "migrate-undo": "sequelize-cli db:migrate:undo",
     "get-demo-data": "sequelize-cli db:seed:all",
-    "build": "npm run migrate && npm run get-demo-data && npm run start"
+    "initial": "npm run migrate && npm run get-demo-data && npm run start"
   },
   "author": "",
   "license": "ISC",
