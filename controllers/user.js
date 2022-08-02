@@ -10,7 +10,7 @@ const userController = {
   register: (req, res) => {
     const { username, password, fullname, email, address, birthday } = req.body;
     if (!username || !password || !fullname || !email) {
-      return res.status(404).send({
+      return res.status(400).send({
         ok: 0,
         message: "資料未填寫完成",
       });
@@ -18,7 +18,7 @@ const userController = {
 
     bcrypt.hash(password, saltRounds, (err, hash) => {
       if (err) {
-        return res.status(404).send({
+        return res.status(400).send({
           ok: 0,
           message: err,
         });
@@ -41,12 +41,12 @@ const userController = {
         })
         .catch((err) => {
           if (err.errors[0].message === "username must be unique") {
-            return res.status(404).send({
+            return res.status(400).send({
               ok: 0,
               message: "帳號已被註冊",
             });
           }
-          return res.status(404).send({
+          return res.status(400).send({
             ok: 0,
             message: err.errors[0].message,
           });
@@ -57,7 +57,7 @@ const userController = {
   login: (req, res) => {
     const { username, password } = req.body;
     if (!username || !password) {
-      return res.status(404).send({
+      return res.status(400).send({
         ok: 0,
         message: "資料未填寫完成",
       });
@@ -70,14 +70,14 @@ const userController = {
     })
       .then((user) => {
         if (!user) {
-          return res.status(404).send({
+          return res.status(400).send({
             ok: 0,
             message: "帳號或密碼輸入錯誤",
           });
         }
 
         if (!user.status) {
-          return res.status(404).send({
+          return res.status(401).send({
             ok: 0,
             message: "你被 BAN 惹哭哭",
           });
@@ -94,14 +94,14 @@ const userController = {
               token,
             });
           }
-          return res.status(404).send({
+          return res.status(400).send({
             ok: 0,
             message: "帳號或密碼輸入錯誤",
           });
         });
       })
       .catch((err) => {
-        return res.status(404).send({
+        return res.status(400).send({
           ok: 0,
           message: err,
         });
@@ -112,7 +112,7 @@ const userController = {
     const token = req.header("Authorization").replace("Bearer ", "");
     jwt.verify(token, SECRET, (err, data) => {
       if (err) {
-        return res.status(404).send({
+        return res.status(401).send({
           ok: 0,
           message: "Unauthorized",
         });
@@ -128,7 +128,7 @@ const userController = {
     const token = req.header("Authorization").replace("Bearer ", "");
     jwt.verify(token, SECRET, (err, user) => {
       if (err) {
-        return res.status(404).send({
+        return res.status(401).send({
           ok: 0,
           message: "Unauthorized",
         });
@@ -154,7 +154,7 @@ const userController = {
           });
         })
         .catch((error) => {
-          return res.status(404).send({
+          return res.status(400).send({
             ok: 0,
             message: error,
           });
@@ -166,7 +166,7 @@ const userController = {
     const token = req.header("Authorization").replace("Bearer ", "");
     const { fullname, email, address, birthday } = req.body;
     if (!fullname || !email) {
-      return res.status(404).send({
+      return res.status(400).send({
         ok: 0,
         message: "Nickname 和 Email 為必填欄位",
       });
@@ -174,7 +174,7 @@ const userController = {
 
     jwt.verify(token, SECRET, (err, user) => {
       if (err) {
-        return res.status(404).send({
+        return res.status(401).send({
           ok: 0,
           message: "Unauthorized",
         });
@@ -199,7 +199,7 @@ const userController = {
           });
         })
         .catch((error) => {
-          return res.status(404).send({
+          return res.status(400).send({
             ok: 0,
             message: error,
           });
@@ -227,7 +227,7 @@ const userController = {
         });
       })
       .catch((error) => {
-        return res.status(404).send({
+        return res.status(400).send({
           ok: 0,
           message: error,
         });
@@ -256,7 +256,7 @@ const userController = {
         });
       })
       .catch((error) => {
-        return res.status(404).send({
+        return res.status(400).send({
           ok: 0,
           message: error,
         });

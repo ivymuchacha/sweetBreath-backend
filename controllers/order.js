@@ -6,7 +6,7 @@ const judgeObj = (obj, chekList, res, errorMessage) => {
   const keysList = Object.keys(obj);
   const emptyData = chekList.filter((key) => keysList.indexOf(key) < 0);
   if (emptyData.length > 0) {
-    return res.status(404).send({
+    return res.status(400).send({
       ok: 0,
       message: errorMessage,
       emptyData,
@@ -150,7 +150,7 @@ const orderController = {
         });
       })
       .catch((err) => {
-        return res.status(404).send({
+        return res.status(400).send({
           ok: 0,
           err,
         });
@@ -183,7 +183,7 @@ const orderController = {
         });
       })
       .catch((err) => {
-        return res.status(404).send({
+        return res.status(400).send({
           ok: 0,
           err,
         });

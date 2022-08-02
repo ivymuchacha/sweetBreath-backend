@@ -6,7 +6,7 @@ const featureController = {
     const { id } = req.params; //Product_id
     const { name, price, promo_price, stock } = req.body;
     if (!name || !stock || !price) {
-      return res.status(404).send({
+      return res.status(400).send({
         ok: 0,
         message: "請完成必填欄位資訊",
       });
@@ -26,7 +26,7 @@ const featureController = {
         });
       })
       .catch((error) => {
-        return res.status(404).send({
+        return res.status(400).send({
           ok: 0,
           message: error,
         });
@@ -37,7 +37,7 @@ const featureController = {
     const { id } = req.params; // Feature_id
     const { name, stock, price, promo_price } = req.body;
     if (!name || !stock || !price) {
-      return res.status(404).send({
+      return res.status(400).send({
         ok: 0,
         message: "請完成必填欄位資訊",
       });
@@ -49,7 +49,7 @@ const featureController = {
       },
     }).then((feature) => {
       if (!feature) {
-        return res.status(404).send({
+        return res.status(400).send({
           ok: 0,
           message: "查無此分類資訊",
         });
@@ -68,7 +68,7 @@ const featureController = {
           });
         })
         .catch((error) => {
-          return res.status(404).send({
+          return res.status(400).send({
             ok: 0,
             message: error,
           });
@@ -85,7 +85,7 @@ const featureController = {
       },
     }).then((feature) => {
       if (!feature) {
-        return res.status(404).send({
+        return res.status(400).send({
           ok: 0,
           message: "查無此規格資訊",
         });
@@ -101,7 +101,7 @@ const featureController = {
           });
         })
         .catch((error) => {
-          return res.status(404).send({
+          return res.status(400).send({
             ok: 0,
             message: error,
           });

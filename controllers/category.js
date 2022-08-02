@@ -16,7 +16,7 @@ const categoryController = {
         });
       })
       .catch((err) => {
-        return res.status(404).send({
+        return res.status(400).send({
           ok: 0,
           message: err,
         });
@@ -41,7 +41,7 @@ const categoryController = {
         });
       })
       .catch((err) => {
-        return res.status(404).send({
+        return res.status(400).send({
           ok: 0,
           message: err,
         });
@@ -68,7 +68,7 @@ const categoryController = {
         });
       })
       .catch((err) => {
-        return res.status(404).send({
+        return res.status(400).send({
           ok: 0,
           message: err,
         });
@@ -78,7 +78,7 @@ const categoryController = {
   addCategory: (req, res) => {
     const { name } = req.body;
     if (!name) {
-      return res.status(404).send({
+      return res.status(400).send({
         ok: 0,
         message: "請完成必填欄位資訊",
       });
@@ -94,7 +94,7 @@ const categoryController = {
         });
       })
       .catch((error) => {
-        return res.status(404).send({
+        return res.status(400).send({
           ok: 0,
           message: error,
         });
@@ -105,7 +105,7 @@ const categoryController = {
     const { id } = req.params;
     const { name } = req.body;
     if (!name) {
-      return res.status(404).send({
+      return res.status(400).send({
         ok: 0,
         message: "請完成必填欄位資訊",
       });
@@ -117,7 +117,7 @@ const categoryController = {
       },
     }).then((category) => {
       if (!category) {
-        return res.status(404).send({
+        return res.status(400).send({
           ok: 0,
           message: "查無此分類資訊",
         });
@@ -133,7 +133,7 @@ const categoryController = {
           });
         })
         .catch((productError) => {
-          return res.status(404).send({
+          return res.status(400).send({
             ok: 0,
             message: productError,
           });
@@ -150,7 +150,7 @@ const categoryController = {
       },
     }).then((category) => {
       if (!category) {
-        return res.status(404).send({
+        return res.status(400).send({
           ok: 0,
           message: "查無此分類資訊",
         });
@@ -166,7 +166,7 @@ const categoryController = {
           });
         })
         .catch((error) => {
-          return res.status(404).send({
+          return res.status(400).send({
             ok: 0,
             message: error,
           });

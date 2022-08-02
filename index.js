@@ -49,7 +49,7 @@ app.all("/*", (req, res, next) => {
     roleAccessRoute &&
     roleAccessRoute.findIndex((router) => path.startsWith(router)) !== -1;
   if (!isValid)
-    return res.status(404).send({
+    return res.status(400).send({
       ok: 0,
       message: "Authorized Token Missing!",
     });

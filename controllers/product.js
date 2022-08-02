@@ -22,7 +22,7 @@ const productController = {
         });
       })
       .catch((err) => {
-        return res.status(404).send({
+        return res.status(400).send({
           ok: 0,
           message: err,
         });
@@ -49,7 +49,7 @@ const productController = {
         });
       })
       .catch((err) => {
-        return res.status(404).send({
+        return res.status(400).send({
           ok: 0,
           message: err,
         });
@@ -72,7 +72,7 @@ const productController = {
     })
       .then((product) => {
         if (!product) {
-          return res.status(404).send({
+          return res.status(400).send({
             ok: 0,
             message: "查無此商品資訊",
           });
@@ -83,7 +83,7 @@ const productController = {
         });
       })
       .catch((err) => {
-        return res.status(404).send({
+        return res.status(400).send({
           ok: 0,
           message: err,
         });
@@ -103,7 +103,7 @@ const productController = {
       stock,
     } = req.body;
     if (!CategoryId || !name || !image || !feature_name || !price || !stock) {
-      return res.status(404).send({
+      return res.status(400).send({
         ok: 0,
         message: "請完成必填欄位資訊",
       });
@@ -131,14 +131,14 @@ const productController = {
             });
           })
           .catch((error) => {
-            return res.status(404).send({
+            return res.status(400).send({
               ok: 0,
               message: error,
             });
           });
       })
       .catch((productError) => {
-        return res.status(404).send({
+        return res.status(400).send({
           ok: 0,
           message: productError,
         });
@@ -149,7 +149,7 @@ const productController = {
     const { id } = req.params;
     const { CategoryId, name, image, info, status } = req.body;
     if (!CategoryId || !name || !image) {
-      return res.status(404).send({
+      return res.status(400).send({
         ok: 0,
         message: "請完成必填欄位資訊",
       });
@@ -162,7 +162,7 @@ const productController = {
       },
     }).then((product) => {
       if (!product) {
-        return res.status(404).send({
+        return res.status(400).send({
           ok: 0,
           message: "查無此商品資訊",
         });
@@ -182,7 +182,7 @@ const productController = {
           });
         })
         .catch((productError) => {
-          return res.status(404).send({
+          return res.status(400).send({
             ok: 0,
             message: productError,
           });
@@ -199,7 +199,7 @@ const productController = {
       },
     }).then((product) => {
       if (!product) {
-        return res.status(404).send({
+        return res.status(400).send({
           ok: 0,
           message: "查無此商品資訊",
         });
@@ -215,7 +215,7 @@ const productController = {
           });
         })
         .catch((productError) => {
-          return res.status(404).send({
+          return res.status(400).send({
             ok: 0,
             message: productError,
           });
