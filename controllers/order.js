@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "../../.env" });
+require("dotenv").config({ path: "../.env" });
 const db = require("../models");
 const Orders = db.Orders;
 const OrderItem = db.OrderItem;

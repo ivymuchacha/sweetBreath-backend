@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "../../.env" });
+require("dotenv").config({ path: "../.env" });
 const db = require("../models");
 const Product = db.Product;
 const Category = db.Category;
