@@ -108,8 +108,7 @@ const userController = {
       });
   },
 
-  getMe: (req, res, checkAuthorization) => {
-    checkAuthorization();
+  getMe: (req, res) => {
     const token = req.header("Authorization").replace("Bearer ", "");
     jwt.verify(token, SECRET, (err, data) => {
       if (err) {
@@ -125,8 +124,7 @@ const userController = {
     });
   },
 
-  getUser: (req, res, checkAuthorization) => {
-    checkAuthorization();
+  getUser: (req, res) => {
     const token = req.header("Authorization").replace("Bearer ", "");
     jwt.verify(token, SECRET, (err, user) => {
       if (err) {
@@ -164,8 +162,7 @@ const userController = {
     });
   },
 
-  editUser: (req, res, checkAuthorization) => {
-    checkAuthorization();
+  editUser: (req, res) => {
     const token = req.header("Authorization").replace("Bearer ", "");
     const { fullname, email, address, birthday } = req.body;
     if (!fullname || !email) {
@@ -210,95 +207,60 @@ const userController = {
     });
   },
 
-  admin: (req, res, checkAuthorization) => {
-    checkAuthorization();
-    const token = req.header("Authorization").replace("Bearer ", "");
-    jwt.verify(token, SECRET, (err, user) => {
-      if (err) {
-        return res.status(404).send({
-          ok: 0,
-          message: "Unauthorized",
+  admin: (req, res) => {
+    User.findAll({
+      attributes: [
+        "id",
+        "username",
+        "fullname",
+        "email",
+        "address",
+        "birthday",
+        "is_admin",
+        "status",
+      ],
+    })
+      .then((users) => {
+        return res.status(200).send({
+          ok: 1,
+          data: users,
         });
-      }
-
-      if (!user.is_admin) {
-        return res.status(404).send({
-          ok: 0,
-          message: "Unauthorized",
-        });
-      }
-
-      User.findAll({
-        attributes: [
-          "id",
-          "username",
-          "fullname",
-          "email",
-          "address",
-          "birthday",
-          "is_admin",
-          "status",
-        ],
       })
-        .then((users) => {
-          return res.status(200).send({
-            ok: 1,
-            data: users,
-          });
-        })
-        .catch((error) => {
-          return res.status(404).send({
-            ok: 0,
-            message: error,
-          });
+      .catch((error) => {
+        return res.status(404).send({
+          ok: 0,
+          message: error,
         });
-    });
+      });
   },
 
-  adminEditUsers: (req, res, checkAuthorization) => {
-    checkAuthorization();
-    const token = req.header("Authorization").replace("Bearer ", "");
+  adminEditUsers: (req, res) => {
     const { id } = req.params;
     const { is_admin, status } = req.body;
-    jwt.verify(token, SECRET, (err, user) => {
-      if (err) {
-        return res.status(404).send({
-          ok: 0,
-          message: "Unauthorized",
-        });
-      }
 
-      if (!user.is_admin) {
-        return res.status(404).send({
-          ok: 0,
-          message: "Unauthorized",
+    User.findOne({
+      where: {
+        id,
+      },
+    })
+      .then((person) => {
+        person.update({
+          is_admin,
+          status,
         });
-      }
-
-      User.findOne({
-        where: {
-          id,
-        },
       })
-        .then((person) => {
-          person.update({
-            is_admin,
-            status,
-          });
-        })
-        .then(() => {
-          return res.status(200).send({
-            ok: 1,
-            message: "編輯會員權限完成",
-          });
-        })
-        .catch((error) => {
-          return res.status(404).send({
-            ok: 0,
-            message: error,
-          });
+      .then(() => {
+        return res.status(200).send({
+          ok: 1,
+          message: "編輯會員權限完成",
         });
-    });
+      })
+      .catch((error) => {
+        return res.status(404).send({
+          ok: 0,
+          message: error,
+        });
+      });
   },
 };
 

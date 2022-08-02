@@ -1,9 +1,6 @@
-require("dotenv").config({ path: "../.env" });
 const db = require("../models");
 const Orders = db.Orders;
 const OrderItem = db.OrderItem;
-const jwt = require("jsonwebtoken");
-const SECRET = process.env.JWT_SECRET;
 
 const judgeObj = (obj, chekList, res, errorMessage) => {
   const keysList = Object.keys(obj);
@@ -19,8 +16,7 @@ const judgeObj = (obj, chekList, res, errorMessage) => {
 };
 
 const orderController = {
-  createOrder: (req, res, checkAuthorization) => {
-    checkAuthorization();
+  createOrder: (req, res) => {
     //驗證基本資料
     const {
       UserId,
@@ -97,93 +93,68 @@ const orderController = {
     });
     //Order.create(req.body);
   },
-  getOrderList: (req, res, checkAuthorization) => {
-    checkAuthorization();
-    const token = req.header("Authorization").replace("Bearer ", "");
-    jwt.verify(token, SECRET, (err, user) => {
-      if (err) {
-        return res.status(404).send({
-          ok: 0,
-          message: "Unauthorized",
-        });
-      }
-      if (!user.is_admin) {
-        return res.status(404).send({
-          ok: 0,
-          message: "Unauthorized",
-        });
-      }
-      Orders.findAll({
-        include: [
-          {
-            model: OrderItem,
-            attributes: [
-              "product_id",
-              "product_name",
-              "product_image",
-              "product_feature",
-              "product_price",
-              "product_quantity",
-            ],
-          },
-        ],
-      })
-        .then((data) => {
-          return res.status(200).send({
-            ok: 1,
-            data,
-          });
-        })
-        .catch((err) => {
-          return res.status(200).send({
-            ok: 0,
-            err,
-          });
-        });
-    });
-  },
-  getUserOrder: (req, res, checkAuthorization) => {
-    checkAuthorization();
-    const token = req.header("Authorization").replace("Bearer ", "");
-    const { user_id } = req.params;
-    jwt.verify(token, SECRET, (err, user) => {
-      if (err) {
-        return res.status(404).send({
-          ok: 0,
-          message: "Unauthorized",
-        });
-      }
-      Orders.findAll({
-        where: {
-          UserId: user_id,
+  getOrderList: (req, res) => {
+    Orders.findAll({
+      include: [
+        {
+          model: OrderItem,
+          attributes: [
+            "product_id",
+            "product_name",
+            "product_image",
+            "product_feature",
+            "product_price",
+            "product_quantity",
+          ],
         },
-        include: [
-          {
-            model: OrderItem,
-            attributes: [
-              "product_id",
-              "product_name",
-              "product_image",
-              "product_feature",
-              "product_price",
-              "product_quantity",
-            ],
-          },
-        ],
-      })
-        .then((data) => {
-          return res.status(200).send({
-            ok: 1,
-            data,
-          });
-        })
-        .catch((err) => {
-          return res.status(404).send({
-            ok: 0,
-            err,
-          });
+      ],
+    })
+      .then((data) => {
+        return res.status(200).send({
+          ok: 1,
+          data,
         });
-    });
+      })
+      .catch((err) => {
+        return res.status(200).send({
+          ok: 0,
+          err,
+        });
+      });
+  },
+  getUserOrder: (req, res) => {
+    const { user_id } = req.params;
+
+    Orders.findAll({
+      where: {
+        UserId: user_id,
+      },
+      include: [
+        {
+          model: OrderItem,
+          attributes: [
+            "product_id",
+            "product_name",
+            "product_image",
+            "product_feature",
+            "product_price",
+            "product_quantity",
+          ],
+        },
+      ],
+    })
+      .then((data) => {
+        return res.status(200).send({
+          ok: 1,
+          data,
+        });
+      })
+      .catch((err) => {
+        return res.status(404).send({
+          ok: 0,
+          err,
+        });
+      });
   },
   getOrderItem: (req, res) => {
     const { order_number } = req.params;
@@ -218,62 +189,46 @@ const orderController = {
         });
       });
   },
-  editOrderStatus: (req, res, checkAuthorization) => {
-    checkAuthorization();
-    const token = req.header("Authorization").replace("Bearer ", "");
+  editOrderStatus: (req, res) => {
     const { order_number } = req.params;
     const { is_paid, is_sent, is_done, is_cancel, status } = req.body;
     const checkList = ["is_paid", "is_sent", "is_done", "is_cancel", "status"];
 
     judgeObj(req.body, checkList, res, "狀態不完整");
-    jwt.verify(token, SECRET, (err, user) => {
-      if (err) {
-        return res.status(404).send({
-          ok: 0,
-          message: "Unauthorized",
-        });
-      }
-      if (!user.is_admin) {
-        return res.status(404).send({
-          ok: 0,
-          message: "Unauthorized",
-        });
-      }
-      Orders.findOne({
-        where: {
-          order_number,
-        },
-      })
-        .then((order) => {
-          order
-            .update({
-              is_paid,
-              is_sent,
-              is_done,
-              is_cancel,
-              status,
-            })
-            .then((result) => {
-              return res.status(200).send({
-                ok: 1,
-                message: "編輯會員資料完成",
-                result,
-              });
-            })
-            .catch((err) => {
-              return res.status(200).send({
-                ok: 0,
-                err,
-              });
+    Orders.findOne({
+      where: {
+        order_number,
+      },
+    })
+      .then((order) => {
+        order
+          .update({
+            is_paid,
+            is_sent,
+            is_done,
+            is_cancel,
+            status,
+          })
+          .then((result) => {
+            return res.status(200).send({
+              ok: 1,
+              message: "編輯會員資料完成",
+              result,
             });
-        })
-        .catch((err) => {
-          return res.status(200).send({
-            ok: 0,
-            err,
+          })
+          .catch((err) => {
+            return res.status(200).send({
+              ok: 0,
+              err,
+            });
           });
+      })
+      .catch((err) => {
+        return res.status(200).send({
+          ok: 0,
+          err,
         });
-    });
+      });
   },
 };
 
